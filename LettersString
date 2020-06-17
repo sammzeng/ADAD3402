@@ -1,4 +1,4 @@
-// P_3_1_3_01.pde
+// P_3_1_3_04.pde
 // 
 // Generative Gestaltung, ISBN: 978-3-87439-759-9
 // First Edition, Hermann Schmidt, Mainz, 2009
@@ -18,17 +18,20 @@
 
 /**
  * analysing and sorting the letters of a text 
- * changing the letters alpha value in relation to frequency
+ * connecting subsequent letters with lines
  *
  * MOUSE
  * position x          : interpolate between normal text and sorted position
  *
  * KEYS
- * 1                   : toggle alpha mode
- * s                   : save png
- * p                   : save pdf
+ * 1                   : toggle grey lines on/off
+ * 2                   : toggle colored lines on/off
+ * 3                   : toggle text on/off
+ * 4                   : switch all letters off
+ * 5                   : switch all letters on
+ * a-z                 : switch letter on/off
+ * ctrl                : save png + pdf
  */
-
 
 import processing.pdf.*;
 import java.util.Calendar;
@@ -36,24 +39,33 @@ import java.util.Calendar;
 boolean savePDF = false;
 
 PFont font;
+String[] lines;
 String joinedText;
 
 String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜß,.;:!? ";
 int[] counters = new int[alphabet.length()];
+boolean[] drawLetters = new boolean[alphabet.length()];
 
 float charSize;
 color charColor = 0;
-int posX, posY;
+int posX = 20;
+int posY = 50;
 
-boolean drawAlpha = true;
+boolean drawGreyLines = false;
+boolean drawColoredLines = true;
+boolean drawText = true;
 
 
 void setup() {
-  size(670, 800);
-  String[] lines = loadStrings("faust_kurz.txt");
+  size(1200, 800);
+  lines = loadStrings("faust_kurz.txt");  //laden des zu analysierenden textes
   joinedText = join(lines, " ");
 
   font = createFont("Courier", 10);
+
+  for (int i = 0; i < alphabet.length(); i++) {
+    drawLetters[i] = true;
+  }
 
   countCharacters();
 }
@@ -61,16 +73,39 @@ void setup() {
 
 void draw() {
   if (savePDF) beginRecord(PDF, timestamp()+".pdf");
-  
+
+  colorMode(HSB, 360, 100, 100, 100);
   textFont(font);
-  background(255);
+  background(360);
   noStroke();
+  fill(0);
   smooth();
 
-  posX = 20;
-  posY = 40;
+  translate(50, 0);
 
-  // go through all characters in the text to draw them  
+  posX = 0;
+  posY = 200;
+  float[] sortPositionsX = new float[alphabet.length()];
+  float[] oldPositionsX = new float[alphabet.length()];
+  float[] oldPositionsY = new float[alphabet.length()];
+  float oldX = 0;
+  float oldY = 0;
+
+  // draw counters
+  if (mouseX >= width-50) {
+    textSize(10);
+    for (int i = 0; i < alphabet.length(); i++) {
+      textAlign(LEFT);
+      text(alphabet.charAt(i), -15, i*20+40);
+      textAlign(RIGHT);
+      text(counters[i], -20, i*20+40);
+    }
+  }
+
+  // go through all characters in the text to draw them
+  textAlign(LEFT);
+  textSize(18);
+  
   for (int i = 0; i < joinedText.length(); i++) {
     // again, find the index of the current letter in the alphabet
     String s = str(joinedText.charAt(i)).toUpperCase();
@@ -78,21 +113,48 @@ void draw() {
     int index = alphabet.indexOf(uppercaseChar);
     if (index < 0) continue;
 
-    if (drawAlpha) fill(87, 35, 129, counters[index]*3);
-    else fill(87, 35, 129);
-    textSize(18);
-
-    float sortY = index*20+40;
     float m = map(mouseX, 50,width-50, 0,1);
     m = constrain(m, 0, 1);
+
+    float sortX = sortPositionsX[index];
+    float interX = lerp(posX, sortX, m);
+
+    float sortY = index*20+40;
     float interY = lerp(posY, sortY, m);
 
-    text(joinedText.charAt(i), posX, interY);
+    if (drawLetters[index]) {
+      if (drawGreyLines) {
+        if (oldX!=0 && oldY!=0) {
+          stroke(0, 10);
+          line(oldX,oldY, interX,interY);
+        }
+        oldX = interX;
+        oldY = interY;
+      }
 
+      if (drawColoredLines) {
+        if (oldPositionsX[index]!=0 && oldPositionsY[index]!=0) {
+          stroke(index*10, 80, 60, 50);
+          line(oldPositionsX[index],oldPositionsY[index], interX,interY);
+        }
+        oldPositionsX[index] = interX;
+        oldPositionsY[index] = interY;
+      }
+
+      if (drawText) {
+        text(joinedText.charAt(i), interX, interY);
+      }
+    }
+    else {
+      oldX = 0;
+      oldY = 0;
+    }
+
+    sortPositionsX[index] += textWidth(joinedText.charAt(i));
     posX += textWidth(joinedText.charAt(i));
     if (posX >= width-200 && uppercaseChar == ' ') {
-      posY += 30;
-      posX = 20;
+      posY += 40;
+      posX = 0;
     }
   }
 
@@ -103,12 +165,10 @@ void draw() {
 }
 
 
-void countCharacters(){
+void countCharacters() {
   for (int i = 0; i < joinedText.length(); i++) {
     // get one char from the text, convert it to a string and turn it to uppercase
-    char c = joinedText.charAt(i);
-    String s = str(c);
-    s = s.toUpperCase();
+    String s = str(joinedText.charAt(i)).toUpperCase();
     // convert it back to a char
     char uppercaseChar = s.charAt(0);
     // get the position of this char inside the alphabet string
@@ -119,13 +179,32 @@ void countCharacters(){
 }
 
 
-
-
 void keyReleased(){
-  if (key == 's' || key == 'S') saveFrame(timestamp()+"_##.png");
-  if (key=='p' || key=='P') savePDF = true;
+  if (keyCode == CONTROL) {
+    saveFrame(timestamp()+"_##.png");
+    savePDF = true;
+  }
 
-  if (key == '1') drawAlpha = !drawAlpha;
+  if (key == '1') drawGreyLines = !drawGreyLines;
+  if (key == '2') drawColoredLines = !drawColoredLines;
+  if (key == '3') drawText = !drawText;
+
+  if (key == '4') {
+    for (int i = 0; i < alphabet.length(); i++) {
+      drawLetters[i] = false;
+    }
+  }
+  if (key == '5') {
+    for (int i = 0; i < alphabet.length(); i++) {
+      drawLetters[i] = true;
+    }
+  }
+  String s = str(key).toUpperCase();
+  char uppercaseKey = s.charAt(0);
+  int index = alphabet.indexOf(uppercaseKey);
+  if (index >= 0) {
+    drawLetters[index] = !drawLetters[index];
+  }
 }
 
 
