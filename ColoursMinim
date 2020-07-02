@@ -1,0 +1,81 @@
+import processing.opengl.*;
+import ddf.minim.*;
+import ddf.minim.signals.*;
+import ddf.minim.analysis.*;
+import ddf.minim.effects.*;
+Minim minim;
+AudioInput in;
+
+
+PImage img;
+int[][] values;
+
+ParticleSystem ps;
+ParticleSystem rw;
+float position;
+float direction = 40;
+float air;
+float flow = 10;
+
+void setup() {
+  size(1200, 1200,OPENGL);
+  frameRate(60);
+   
+   rw = new ParticleSystem(new PVector(width/2,50));
+}
+{
+minim = new Minim (this);
+in = minim.getLineIn(Minim.STEREO,512);
+}
+
+void draw() {
+  float p = 1;
+  for (int i = 0; i <in.bufferSize(); i++){
+    p += abs(in.mix.get(i))*120;
+    print(in.mix.get(i));
+    println("volume");
+     background(0, 20,70);
+  } 
+  // Option #1 (move the Particle System origin)
+  
+  float q = 110;
+  for (int i = 0; i <in.bufferSize(); i++){
+  q += abs(in.mix.get(i))*40;
+  rw.origin.set(q,q-50);}
+  rw.addParticle();
+  rw.run();
+
+  // Option #2 (move the Particle System origin)
+  // ps.addParticle(mouseX,mouseY);
+  
+  
+
+ 
+position = position + direction;
+if (position>width)
+direction = -5;
+if (position<0)
+direction =5;
+if (air == 1)
+{
+  if (position == width)
+   flow = flow+ 20;
+  if (position < 0)
+  flow = flow + 20;
+}
+
+if (air == 0)
+{
+  if (position > width)
+  flow = flow -20;
+  if (position == 0)
+  flow = flow -20;
+}
+
+if (flow > height)
+ air = 0;
+ 
+if (flow < 0)
+ air = 1;
+
+ }
