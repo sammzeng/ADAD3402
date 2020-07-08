@@ -35,5 +35,10 @@ void draw() {
       }
     }
     endShape(CLOSE);
+    noLoop();
   }
 }
+
+void keyPressed(){
+ redraw();
+ }
