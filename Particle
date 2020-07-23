@@ -1,9 +1,3 @@
-// The Nature of Code
-// Daniel Shiffman
-// http://natureofcode.com
-
-// Simple Particle System
-
 class Particle {
   PVector position;
   PVector velocity;
@@ -11,18 +5,19 @@ class Particle {
   float lifespan;
   color c;
   float r = random(100);
+  float v = 6.0;
+  float positionx = width/2;
+  float positiony= height/2;
 
   Particle(PVector l) {
    acceleration = new PVector(0,0.5);
     velocity = new PVector(random(-1,1),random(-2,0));
     position = l.get();
-    lifespan = 255.0;
+    lifespan = 70.0;
     float f = 1;
       for (int i = 0; i <in.bufferSize(); i++){
         f += abs(in.mix.get(i))*120;
-        print(in.mix.get(i));
-        println("volume");
-  } 
+         } 
     c = color(f,random(200),200);
   }
 
@@ -40,10 +35,17 @@ class Particle {
 
   // Method to display
   void display() {
-    stroke(0,lifespan);
-    strokeWeight(0);
-    fill(c,lifespan);
-    ellipse(position.x,position.y,r,r);
+    stroke(c,lifespan);
+    strokeWeight(1);
+     noFill();
+     beginShape();
+    for (int u = 0 ; u <in.bufferSize(); u++){
+      v += abs(in.mix.get(u))*5;
+      float x = v*cos(u);
+      float y = v*sin(u);
+      vertex(x + positionx,y + positiony);
+    }
+    endShape();
   }
   
   // Is the particle still useful?
