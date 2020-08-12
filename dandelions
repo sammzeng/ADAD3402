@@ -4,12 +4,19 @@ import ddf.minim.*;
 import ddf.minim.signals.*;
 import ddf.minim.analysis.*;
 import ddf.minim.effects.*;
+import ddf.minim.ugens.*;
 
 Minim minim;
 AudioInput in;
 ParticleSystem dandelion1;
+AudioOutput out;
+Sampler sample;
 
 float heart = 20;
+int stalks=600;
+int plant=2000/2;
+int [] stalkheight ={0,stalks-40, stalks-110, stalks-70, stalks-50, stalks-140};
+int [] stalkspread ={0, plant-550, plant-300, plant, plant+300, plant+500};
 
 float stalkheightone =600-40;
 float stalkheighttwo = 600-110;
@@ -25,27 +32,9 @@ float stalkspreadfive = 1000+500;
 
 float triggerarea = 60;
 
-float rectA1 = 300;
-float rectB1 = 200;
-float rectC1 = 340;
-float rectD1 = 1340;
-float rectE1 = 540;
-float rectF1 = 1640;
-float rectG1 = 740;
-float rectH1 = 240;
-float rectI1 = 1840;
-float rectJ1 = 840;
-
-float rectA2 = 40;
-float rectB2 = 200;
-float rectC2 = 300;
-float rectD2 = 180;
-float rectE2 = 240;
-float rectF2 = 340;
-float rectG2 = 50;
-float rectH2 = 320;
-float rectI2 = 50;
-float rectJ2 = 320;
+int [] rectx = {0,300,200, 340, 1340, 540,1640,740,240,1840,840};
+int [] recty = {0,40, 200, 300, 180, 240, 340, 50, 320, 50, 320, 320};
+Ball[] balls = new Ball [numSeeds];
 
 void setup() {
   size(2000, 600,OPENGL);
@@ -56,6 +45,9 @@ void setup() {
 {
 minim = new Minim (this);
 in = minim.getLineIn(Minim.STEREO,512);
+out= minim.getLineOut();
+sample  = new Sampler( "bell.wav", 30, minim );
+sample.patch(out); 
 }
 
 void draw() {
@@ -65,41 +57,45 @@ void draw() {
   fill(100,0,0);
   
   //stalk one
-  line(stalkspreadone,height,stalkspreadone,stalkheightone+heart/2);
-  ellipse(stalkspreadone, stalkheightone, heart,heart);
+  line(stalkspread[1],height,stalkspread[1],stalkheight[1]+heart/2);
+  ellipse(stalkspread[1], stalkheight[1], heart,heart);
   
   
   //stalk two  
-  line(stalkspreadtwo,height,stalkspreadtwo,stalkheighttwo+heart/2);
-  ellipse(stalkspreadtwo, stalkheighttwo, heart,heart);
+  line(stalkspread[2],height,stalkspread[2],stalkheight[2]+heart/2);
+  ellipse(stalkspread[2], stalkheight[1], heart,heart);
   
   
   //stalk three 
-  line(stalkspreadthree,height,stalkspreadthree,stalkheightthree+heart/2);
-  ellipse(stalkspreadthree, stalkheightthree, heart,heart);
+  line(stalkspread[3],height,stalkspread[3],stalkheight[3]+heart/2);
+  ellipse(stalkspread[3], stalkheight[3], heart,heart);
   
    //stalk four 
-  line(stalkspreadfour,height,stalkspreadfour,stalkheightfour+heart/2);
-  ellipse(stalkspreadfour, stalkheightfour, heart,heart);
+  line(stalkspread[4],height,stalkspread[4],stalkheight[4]+heart/2);
+  ellipse(stalkspread[4], stalkheight[4], heart,heart);
  
   
   //stalk five 
-  line(stalkspreadfive,height,stalkspreadfive,stalkheightfive+heart/2);
-  ellipse(stalkspreadfive, stalkheightfive, heart,heart);
-  
+  line(stalkspread[5],height,stalkspread[5],stalkheight[5]+heart/2);
+  ellipse(stalkspread[5], stalkheight[5], heart,heart);
   
   noStroke();
   fill(100,0,0);
-  rect(rectA1,rectA2,triggerarea,triggerarea);
-  rect(rectB1,rectB2,triggerarea,triggerarea);
-  rect(rectC1,rectC2,triggerarea,triggerarea);
-  rect(rectD1,rectD2,triggerarea,triggerarea);
-  rect(rectE1,rectE2,triggerarea,triggerarea);
-  rect(rectF1,rectF2,triggerarea,triggerarea);
-  rect(rectG1,rectG2,triggerarea,triggerarea);
-  rect(rectH1,rectH2,triggerarea,triggerarea);
-  rect(rectI1,rectI2,triggerarea,triggerarea);
-  rect(rectJ1,rectJ2,triggerarea,triggerarea);
+  rect(rectx[1],recty[1],triggerarea,triggerarea);
+  rect(rectx[2],recty[2],triggerarea,triggerarea);
+  rect(rectx[3],recty[3],triggerarea,triggerarea);
+  rect(rectx[4],recty[4],triggerarea,triggerarea);
+  rect(rectx[5],recty[5],triggerarea,triggerarea);
+  rect(rectx[6],recty[6],triggerarea,triggerarea);
+  rect(rectx[7],recty[7],triggerarea,triggerarea);
+  rect(rectx[8],recty[8],triggerarea,triggerarea);
+  rect(rectx[9],recty[9],triggerarea,triggerarea);
+  rect(rectx[10],recty[10],triggerarea,triggerarea);
+  
+  for (Ball ball: balls) {
+  ball.collide();
+  ball.move();
+  ball.display();
   
   float q = 100;
   for (int i = 0; i <in.bufferSize(); i++){
