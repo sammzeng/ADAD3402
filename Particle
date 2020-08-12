@@ -3,23 +3,17 @@ class Particle {
   PVector velocity;
   PVector acceleration;
   float lifespan;
-  color c;
-  float r = random(100);
+  float r = random(5);
   float v = 6.0;
   float positionx = width/2;
   float positiony= height/2;
 
   Particle(PVector l) {
-   acceleration = new PVector(0,0.5);
-    velocity = new PVector(random(-1,1),random(-2,0));
+   acceleration = new PVector(0,-0.05);
+    velocity = new PVector(0,random(-2,0));
     position = l.get();
     lifespan = 70.0;
-    float f = 1;
-      for (int i = 0; i <in.bufferSize(); i++){
-        f += abs(in.mix.get(i))*120;
-         } 
-    c = color(f,random(200),200);
-  }
+     }
 
   void run() {
     update();
@@ -30,22 +24,21 @@ class Particle {
   void update() {
     velocity.add(acceleration);
     position.add(velocity);
-    lifespan -= 2.0;
+    lifespan -= 3.0;
   }
 
   // Method to display
   void display() {
-    stroke(c,lifespan);
+    stroke(200,lifespan);
     strokeWeight(1);
-     noFill();
+     noFill(lifespan);
      beginShape();
-    for (int u = 0 ; u <in.bufferSize(); u++){
-      v += abs(in.mix.get(u))*5;
-      float x = v*cos(u);
-      float y = v*sin(u);
-      vertex(x + positionx,y + positiony);
-    }
-    endShape();
+    ellipse(position.x, position.y,r,r);
+    ellipse(stalkspreadtwo,stalkheighttwo,r,r);
+    ellipse(stalkspreadthree,stalkheightthree,r,r);
+    ellipse(stalkspreadfour,stalkheightfour,r,r);
+    ellipse(stalkspreadfive,stalkheightfive,r,r);
+    
   }
   
   // Is the particle still useful?
