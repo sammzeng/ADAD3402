@@ -1,3 +1,4 @@
+import java.util.Arrays; 
 import processing.opengl.*;
 import ddf.minim.*;
 import ddf.minim.signals.*;
@@ -6,17 +7,50 @@ import ddf.minim.effects.*;
 
 Minim minim;
 AudioInput in;
-PImage img;
-float x = 0;
-ParticleSystem rw;
+ParticleSystem dandelion1;
 
+float heart = 20;
+
+float stalkheightone =600-40;
+float stalkheighttwo = 600-110;
+float stalkheightthree = 600-70;
+float stalkheightfour = 600-50;
+float stalkheightfive = 600-140;
+
+float stalkspreadone = 1000-550;
+float stalkspreadtwo = 1000-300;
+float stalkspreadthree = 1000;
+float stalkspreadfour = 1000+300;
+float stalkspreadfive = 1000+500;
+
+float triggerarea = 60;
+
+float rectA1 = 300;
+float rectB1 = 200;
+float rectC1 = 340;
+float rectD1 = 1340;
+float rectE1 = 540;
+float rectF1 = 1640;
+float rectG1 = 740;
+float rectH1 = 240;
+float rectI1 = 1840;
+float rectJ1 = 840;
+
+float rectA2 = 40;
+float rectB2 = 200;
+float rectC2 = 300;
+float rectD2 = 180;
+float rectE2 = 240;
+float rectF2 = 340;
+float rectG2 = 50;
+float rectH2 = 320;
+float rectI2 = 50;
+float rectJ2 = 320;
 
 void setup() {
   size(2000, 600,OPENGL);
-  frameRate(20);
-  loadFont("Gravity-Book-48.vlw");
-  img=loadImage(x+"png");
-  rw = new ParticleSystem(new PVector(width/2,50));
+  frameRate(50);
+  dandelion1 = new ParticleSystem(new PVector(width/2,50));
 }
 
 {
@@ -25,46 +59,53 @@ in = minim.getLineIn(Minim.STEREO,512);
 }
 
 void draw() {
-  if (x>0){
-    background(img); 
-  }
-    else
-    {
-    background(0, 20,70);
-    }
-    img = loadImage(x +".png");  
-  } 
 
+  stroke(255);
+  strokeWeight(2);
+  fill(100,0,0);
+  
+  //stalk one
+  line(stalkspreadone,height,stalkspreadone,stalkheightone+heart/2);
+  ellipse(stalkspreadone, stalkheightone, heart,heart);
+  
+  
+  //stalk two  
+  line(stalkspreadtwo,height,stalkspreadtwo,stalkheighttwo+heart/2);
+  ellipse(stalkspreadtwo, stalkheighttwo, heart,heart);
+  
+  
+  //stalk three 
+  line(stalkspreadthree,height,stalkspreadthree,stalkheightthree+heart/2);
+  ellipse(stalkspreadthree, stalkheightthree, heart,heart);
+  
+   //stalk four 
+  line(stalkspreadfour,height,stalkspreadfour,stalkheightfour+heart/2);
+  ellipse(stalkspreadfour, stalkheightfour, heart,heart);
+ 
+  
+  //stalk five 
+  line(stalkspreadfive,height,stalkspreadfive,stalkheightfive+heart/2);
+  ellipse(stalkspreadfive, stalkheightfive, heart,heart);
+  
+  
+  noStroke();
+  fill(100,0,0);
+  rect(rectA1,rectA2,triggerarea,triggerarea);
+  rect(rectB1,rectB2,triggerarea,triggerarea);
+  rect(rectC1,rectC2,triggerarea,triggerarea);
+  rect(rectD1,rectD2,triggerarea,triggerarea);
+  rect(rectE1,rectE2,triggerarea,triggerarea);
+  rect(rectF1,rectF2,triggerarea,triggerarea);
+  rect(rectG1,rectG2,triggerarea,triggerarea);
+  rect(rectH1,rectH2,triggerarea,triggerarea);
+  rect(rectI1,rectI2,triggerarea,triggerarea);
+  rect(rectJ1,rectJ2,triggerarea,triggerarea);
   
   float q = 100;
   for (int i = 0; i <in.bufferSize(); i++){
   q += abs(in.mix.get(i))*40;
-  rw.origin.set(q,q);}
-  rw.addParticle();
-  rw.run();
+  dandelion1.origin.set(stalkspreadone, stalkheightone);}
+  dandelion1.addParticle();
+  dandelion1.run();
 
-  fill(255);
-  textSize(50);
-  textAlign(CENTER);
-  text("Tell me your secrets", width/2,-40+height/2 );
-  
-  fill(150);
-  textSize(20);
-  textAlign(LEFT);
-  text("Save - (S)", 10, height- 10);
-  
-  stroke(255);
-  strokeWeight(2);
-  line(width/2, height/2,width/2,height);
-  }
-  
-  void keyReleased() {
-  if (key == 's' || key == 'S') {
-  x = x+1;
-  saveFrame(x +".png"); 
-  if (x>5){
-    x=0;
-  }
-  println(x);
-  }
  }
