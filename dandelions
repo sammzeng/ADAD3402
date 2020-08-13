@@ -35,6 +35,9 @@ float triggerarea = 60;
 int [] rectx = {0,40,200, 340, 1340, 540,1640,740,240,1840,840};
 int [] recty = {0,40, 200, 300, 180, 240, 340, 50, 320, 50, 320, 320};
 
+//int numSeeds=5;
+//float spring = 0.05;
+//Ball[] balls = new Ball [numSeeds];
 
 void setup() {
   size(2000, 600,OPENGL);
@@ -46,6 +49,10 @@ void setup() {
   minim = new Minim (this);
   in = minim.getLineIn(Minim.STEREO,512);
   out= minim.getLineOut();
+  
+  /*for (int i = 0; i < numSeeds; i++) {
+  balls[i] = new Ball(random(width), random(height), random(30, 70), i, balls);
+  }*/
   
   sample  = new Sampler("bell.wav", 30, minim );
   sample.patch(out); 
@@ -62,26 +69,28 @@ pushStyle();
   fill(100,0,0);
   popStyle();
   
-  //stalk one
-  //line(stalkspread[1],height,stalkspread[1],stalkheight[1]+heart/2);
-  //ellipse(stalkspread[1], stalkheight[1], heart,heart);
+  /*//stalk one
+  line(stalkspread[1],height,stalkspread[1],stalkheight[1]+heart/2);
+  ellipse(stalkspread[1], stalkheight[1], heart,heart);
   
   //stalk two  
-  //line(stalkspread[2],height,stalkspread[2],stalkheight[2]+heart/2);
-  //ellipse(stalkspread[2], stalkheight[2], heart,heart);
+  line(stalkspread[2],height,stalkspread[2],stalkheight[2]+heart/2);
+  ellipse(stalkspread[2], stalkheight[2], heart,heart);
     
   //stalk three 
-  //line(stalkspread[3],height,stalkspread[3],stalkheight[3]+heart/2);
-  //ellipse(stalkspread[3], stalkheight[3], heart,heart);
+  line(stalkspread[3],height,stalkspread[3],stalkheight[3]+heart/2);
+  ellipse(stalkspread[3], stalkheight[3], heart,heart);
   
   //stalk four 
-  //line(stalkspread[4],height,stalkspread[4],stalkheight[4]+heart/2);
-  //ellipse(stalkspread[4], stalkheight[4], heart,heart);
+  line(stalkspread[4],height,stalkspread[4],stalkheight[4]+heart/2);
+  ellipse(stalkspread[4], stalkheight[4], heart,heart);
    
   //stalk five 
-  //line(stalkspread[5],height,stalkspread[5],stalkheight[5]+heart/2);
-  //ellipse(stalkspread[5], stalkheight[5], heart,heart);
-   
+  line(stalkspread[5],height,stalkspread[5],stalkheight[5]+heart/2);
+  ellipse(stalkspread[5], stalkheight[5], heart,heart);
+  */
+  
+  /*for (Ball ball: balls) {
   pushStyle();
   noStroke();
   fill(100,0,0);
@@ -96,7 +105,9 @@ pushStyle();
   //rect(rectx[9],recty[9],triggerarea,triggerarea);
   //rect(rectx[10],recty[10],triggerarea,triggerarea);
   popStyle();
-  
+  ball.collide();
+  ball.display();
+  }*/
     
   pushMatrix();
   translate(width*0.5+20*sin(frameCount*0.05), height*0.5+20*cos(frameCount*0.05));
