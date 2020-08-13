@@ -1,4 +1,4 @@
-class Repeller {
+/*class Repeller {
   float strength = 100;
   PVector location;
   float r = 10;
@@ -24,3 +24,4 @@ class Repeller {
     return dir;
   }
 }
+*/
