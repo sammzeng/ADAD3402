@@ -1,4 +1,4 @@
-//import java.util.Arrays; 
+import java.util.Arrays; 
 //import ddf.minim.signals.*;
 //import ddf.minim.analysis.*;
 //import ddf.minim.effects.*;
@@ -62,12 +62,12 @@ void setup() {
   
   bell  = new Sampler("bell.wav", 30, minim );
   bell2 = new Sampler ("bell2.mp3", 30, minim);
-  bell3  = new Sampler("bell3.wav", 30, minim );
+ // bell3  = new Sampler("bell3.wav", 30, minim );
  // bell4 = new Sampler ("bell4.wav", 30, minim);
   
   bell.patch(out);
   bell2.patch(out);
-  bell3.patch(out);
+ // bell3.patch(out);
 //  bell4.patch(out);
   
 }
