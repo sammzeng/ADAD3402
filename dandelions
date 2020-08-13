@@ -39,9 +39,10 @@ float trip = 10;
 int [] rectx = {0,- 240,200, -340, 1340, 540,1640,740,240,1840,840};
 int [] recty = {0, -240, -200, -300, 180, 240, 340, 50, 320, 50, 320, 320};
 
-int numSeeds=10;
-//float spring = 0.05;
-//Ball[] balls = new Ball [numSeeds];
+int numSeeds=20;
+float spring = 0.005;
+float friction = -0.09;
+Ball[] balls = new Ball [numSeeds];
 
 void setup() {
   size(2000, 600,OPENGL);
@@ -56,30 +57,25 @@ void setup() {
   in = minim.getLineIn(Minim.STEREO,512);
   out= minim.getLineOut();
   
-  /*for (int i = 0; i < numSeeds; i++) {
-  balls[i] = new Ball(random(width), random(height), random(30, 70), i, balls);
-  }*/
+  for (int i = 0; i < numSeeds; i++) {
+  balls[i] = new Ball(random(width), random(height), random(0, 20), i, balls);
+  }
   
   bell  = new Sampler("bell.wav", 30, minim );
   bell2 = new Sampler ("bell2.mp3", 30, minim);
- // bell3  = new Sampler("bell3.wav", 30, minim );
+  bell3  = new Sampler("cicada.wav", 3, minim );
  // bell4 = new Sampler ("bell4.wav", 30, minim);
   
   bell.patch(out);
   bell2.patch(out);
- // bell3.patch(out);
+  bell3.patch(out);
 //  bell4.patch(out);
   
 }
 
 void draw() {
-background(102);
-pushStyle();
-  stroke(255);
-  strokeWeight(2);
-  fill(100,0,0);
-  popStyle();
-  
+background(12,83,102);
+ 
   /*//stalk one
   line(stalkspread[1],height,stalkspread[1],stalkheight[1]+heart/2);
   ellipse(stalkspread[1], stalkheight[1], heart,heart);
@@ -101,26 +97,13 @@ pushStyle();
   ellipse(stalkspread[5], stalkheight[5], heart,heart);
   */
   
-  /*for (Ball ball: balls) {
-  pushStyle();
-  noStroke();
-  fill(100,0,0);
-  rect(rectx[1],recty[1],triggerarea,triggerarea);
-  //rect(rectx[2],recty[2],triggerarea,triggerarea);
-  //rect(rectx[3],recty[3],triggerarea,triggerarea);
-  //rect(rectx[4],recty[4],triggerarea,triggerarea);
-  //rect(rectx[5],recty[5],triggerarea,triggerarea);
-  //rect(rectx[6],recty[6],triggerarea,triggerarea);
-  //rect(rectx[7],recty[7],triggerarea,triggerarea);
-  //rect(rectx[8],recty[8],triggerarea,triggerarea);
-  //rect(rectx[9],recty[9],triggerarea,triggerarea);
-  //rect(rectx[10],recty[10],triggerarea,triggerarea);
-  popStyle();
+  for (Ball ball: balls) {
   ball.collide();
+  ball.move();
   ball.display();
-  }*/
+  }
   
-  fill(150);
+  fill(255);
   textSize(10);
   textAlign(LEFT);
   text("Wishes Fulfilled: " + counter, 10, height- 10);
@@ -130,6 +113,13 @@ pushStyle();
   //rotate(frameCount / -100.0);
   //scale(1+0.3*sin(frameCount*0.05));
   polygon(0, 0, 70, 20);
+  polygon(0, 0, 60, 17);
+  polygon(0, 0, 50, 15);
+  polygon(0, 0, 40, 13);
+  polygon(0, 0, 30, 9);
+  polygon(0, 0, 20, 5);
+  polygon(30, 30, 30, 15);
+  polygon(10, 20, 10, 5);
   popMatrix();
   line(width*0.5+20*sin(frameCount*0.05),height*0.5+20*cos(frameCount*0.05),width/2,height);
   
