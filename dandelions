@@ -11,10 +11,13 @@ Minim minim;
 AudioInput in;
 
 AudioOutput out;
-Sampler sample;
+Sampler bell;
+Sampler bell2;
+Sampler bell3;
+Sampler bell4;
 
 ParticleSystem dandelion1;
-Repeller repeller; //to fix
+//Repeller repeller; //to fix
 
 float seedsx = 0;
 float seedsy = 0;
@@ -30,21 +33,24 @@ boolean noise = false;
 //int [] stalkheight ={0,stalks-40, stalks-110, stalks-70, stalks-50, stalks-140};
 //int [] stalkspread ={0, plant-550, plant-300, plant, plant+300, plant+500};
 
-float triggerarea = 60;
+float trip = 6;
+float trip = 10;
 
-int [] rectx = {0,40,200, 340, 1340, 540,1640,740,240,1840,840};
-int [] recty = {0,40, 200, 300, 180, 240, 340, 50, 320, 50, 320, 320};
+int [] rectx = {0,- 240,200, -340, 1340, 540,1640,740,240,1840,840};
+int [] recty = {0, -240, -200, -300, 180, 240, 340, 50, 320, 50, 320, 320};
 
-//int numSeeds=5;
+int numSeeds=10;
 //float spring = 0.05;
 //Ball[] balls = new Ball [numSeeds];
 
 void setup() {
   size(2000, 600,OPENGL);
   frameRate(50);
-  dandelion1 = new ParticleSystem(new PVector(width/2,50));
+  dandelion1 = new ParticleSystem(new PVector(0,50));
   systems = new ArrayList<ParticleSystem>();
-  repeller = new Repeller (width*0.5+20*sin(frameCount*0.05),height*0.5+20*cos(frameCount*0.05));
+  loadFont("Gravity-Book-48.vlw");
+  
+  //repeller = new Repeller (width*0.5+20*sin(frameCount*0.05),height*0.5+20*cos(frameCount*0.05));
 
   minim = new Minim (this);
   in = minim.getLineIn(Minim.STEREO,512);
@@ -54,15 +60,20 @@ void setup() {
   balls[i] = new Ball(random(width), random(height), random(30, 70), i, balls);
   }*/
   
-  sample  = new Sampler("bell.wav", 30, minim );
-  sample.patch(out); 
+  bell  = new Sampler("bell.wav", 30, minim );
+  bell2 = new Sampler ("bell2.mp3", 30, minim);
+  bell3  = new Sampler("bell3.wav", 30, minim );
+ // bell4 = new Sampler ("bell4.wav", 30, minim);
+  
+  bell.patch(out);
+  bell2.patch(out);
+  bell3.patch(out);
+//  bell4.patch(out);
   
 }
 
 void draw() {
 background(102);
-frameRate(30);
-
 pushStyle();
   stroke(255);
   strokeWeight(2);
@@ -108,7 +119,12 @@ pushStyle();
   ball.collide();
   ball.display();
   }*/
-    
+  
+  fill(150);
+  textSize(10);
+  textAlign(LEFT);
+  text("Wishes Fulfilled: " + counter, 10, height- 10);
+  
   pushMatrix();
   translate(width*0.5+20*sin(frameCount*0.05), height*0.5+20*cos(frameCount*0.05));
   //rotate(frameCount / -100.0);
