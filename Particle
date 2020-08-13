@@ -4,13 +4,15 @@ class Particle {
   PVector acceleration;
   float lifespan;
  
-  float r = random(-2,5);
+  float r = random(-300,0);
+  float s = random(-650,0);
+  float t = random(-2,0);
 
   Particle(PVector l) {
-   acceleration = new PVector(0,0.5);
-    velocity = new PVector(r,r);
+   acceleration = new PVector(0,t);
+    velocity = new PVector(s,r);
     position = l.get();
-    lifespan = 70.0;
+    lifespan = 200.0;
     
     //float f = 1;
     //  for (int i = 0; i <in.bufferSize(); i++){
@@ -39,11 +41,14 @@ class Particle {
 
   // Method to display
   void display() {
+    pushStyle();
     //stroke(c,lifespan);
     //strokeWeight(1);
+    
      fill(lifespan);
      ellipse(position.x,+position.y,10+0.3*sin(frameCount*0.05),10+0.3*sin(frameCount*0.05));
     //scale(1+0.3*sin(frameCount*0.05));
+    popStyle();
     
     // beginShape();
     //for (int u = 0 ; u <in.bufferSize(); u++){
