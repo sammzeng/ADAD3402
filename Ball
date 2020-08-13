@@ -1,4 +1,4 @@
-/*class Ball {
+class Ball {
   
   float x, y;
   float diameter;
@@ -31,17 +31,40 @@
         vy -= ay;
         others[i].vx += ax;
         others[i].vy += ay;
-        sample.trigger();
+        //sample.trigger();
       }
+    }
+  }
+  
+   void move() {
+    vx += random(-0.05, 0.05);
+    vy +=random(-0.05,0.05);
+    x += vx;
+    y += vy;
+    if (x + diameter/2 > width) {
+      x = width - diameter/2;
+      vx *= friction; 
+    }
+    else if (x - diameter/2 < 0) {
+      x = diameter/2;
+      vx *= friction;
+    }
+    if (y + diameter/2 > height) {
+      y = height - diameter/2;
+      vy *= friction; 
+    } 
+    else if (y - diameter/2 < 0) {
+      y = diameter/2;
+      vy *= friction;
     }
   }
   
   void display() {
     pushStyle();
     noStroke();
-    fill(0,0,0,20);
+    fill(255,255,255,50);
     ellipse(x, y, diameter, diameter);
     popStyle();
   }
 }
-*/
+
