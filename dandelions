@@ -1,42 +1,56 @@
-import java.util.Arrays; 
+//import java.util.Arrays; 
 import processing.opengl.*;
 import ddf.minim.*;
-import ddf.minim.signals.*;
-import ddf.minim.analysis.*;
-import ddf.minim.effects.*;
+//import ddf.minim.signals.*;
+//import ddf.minim.analysis.*;
+//import ddf.minim.effects.*;
+import ddf.minim.ugens.*;
 
 Minim minim;
 AudioInput in;
+
+AudioOutput out;
+Sampler sample;
+
 ParticleSystem dandelion1;
-Repeller repeller;
+Repeller repeller; //to fix
 
-float currentx = 0;
-float currenty = 0;
-float heart = 20;
+float seedsx = 0;
+float seedsy = 0;
 
-int stalks=600;
-int plant=2000/2;
-int [] stalkheight ={0,stalks-40, stalks-110, stalks-70, stalks-50, stalks-140};
-int [] stalkspread ={0, plant-550, plant-300, plant, plant+300, plant+500};
+float disappear=6;
 
-float triggerarea = 60;
+boolean noise = false;
 
-int [] rectx = {0,300,200, 340, 1340, 540,1640,740,240,1840,840};
-int [] recty = {0,40, 200, 300, 180, 240, 340, 50, 320, 50, 320, 320};
+//float heart = 20;
+
+//int stalks=600;
+//int plant=2000/2;
+//int [] stalkheight ={0,stalks-40, stalks-110, stalks-70, stalks-50, stalks-140};
+//int [] stalkspread ={0, plant-550, plant-300, plant, plant+300, plant+500};
+
+//float triggerarea = 60;
+
+//int [] rectx = {0,300,200, 340, 1340, 540,1640,740,240,1840,840};
+//int [] recty = {0,40, 200, 300, 180, 240, 340, 50, 320, 50, 320, 320};
 
 
 void setup() {
   size(2000, 600,OPENGL);
   frameRate(50);
   dandelion1 = new ParticleSystem(new PVector(width/2,50));
-}
+  systems = new ArrayList<ParticleSystem>();
+  repeller = new Repeller (width*0.5+20*sin(frameCount*0.05),height*0.5+20*cos(frameCount*0.05));
 
-{
-minim = new Minim (this);
-in = minim.getLineIn(Minim.STEREO,512);
+  minim = new Minim (this);
+  in = minim.getLineIn(Minim.STEREO,512);
+  out= minim.getLineOut();
 }
 
 void draw() {
+background(102);
+frameRate(30);
+
 pushStyle();
   stroke(255);
   strokeWeight(2);
@@ -89,35 +103,51 @@ pushStyle();
   translate(width*0.5+20*sin(frameCount*0.05), height*0.5+20*cos(frameCount*0.05));
   //rotate(frameCount / -100.0);
   //scale(1+0.3*sin(frameCount*0.05));
-  polygon(0, 0, 70, 9);
+  polygon(0, 0, 70, 20);
   popMatrix();
   line(width*0.5+20*sin(frameCount*0.05),height*0.5+20*cos(frameCount*0.05),width/2,height);
   
   dandelion1.applyRepeller(repeller);
-  dandelion1.run();
-  repeller.display();  
+  repeller.display(); 
+  
+  float sound = 1;
+  for (int i = 0; i <in.bufferSize(); i++){
+    sound += abs(in.mix.get(i))*120;
+    print(in.mix.get(i));
+    println("volume");
+    if (sound>360){
+    noise=true;
+    }
+    else{
+    noise=false;
+    }
+  }
   }
   
   void polygon(float x, float y, float radius, int npoints) {
   float angle = TWO_PI / npoints;
   beginShape();
   for (float a = 0; a < TWO_PI; a += angle) {
-    float sx = x + cos(a) * radius;
-    float sy = y + sin(a) * radius;
-    float tx = x + sin(a) * radius;
-    float ty = y + cos(a) * radius;
-    ellipse (sx,sy,6,6);
-    ellipse (tx,ty,6,6);
-    line(0,0,sx,sy);
+    seedsx = x + cos(a) * radius;
+    seedsy = y + sin(a) * radius;
+    
+    pushStyle();
+    noStroke();
+    ellipse (seedsx,seedsy,disappear,disappear);
+    popStyle();
+    line(0,0,seedsx,seedsy);
+    
+    //repeller.position.set(0,0);
         
-    if (mousePressed){
-    dandelion1.origin.set(sx, sy);
+    if (noise==true){
+    disappear =0;
+    dandelion1.origin.set(seedsx, seedsy);
     dandelion1.addParticle();
+    dandelion1.run();
+    }
+    else{
+      disappear=6;
     }
   }
   endShape(CLOSE);
  }
-
- void mousePressed(){
-    systems.add(new ParticleSystem (new PVector(mouseX,mouseY)));
-   }
