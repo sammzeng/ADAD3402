@@ -14,8 +14,8 @@ class ParticleSystem {
   void addParticle(float x, float y) {
     particles.add(new Particle(new PVector(x, y)));
   }
-  
-  void applyForc(PVector f){ //not sure how relevant rn
+  /*
+  void applyForce(PVector f){ //not sure how relevant rn
   for (Particle p: particles){
     p.applyForce(f);
   }
@@ -24,7 +24,7 @@ class ParticleSystem {
   for (Particle p: particles) {
     PVector force = r.repel(p);
     p.applyForce(force);
-  }
+  }*/
 
   void run() {
     for (int i = particles.size()-1; i >= 0; i--) {
