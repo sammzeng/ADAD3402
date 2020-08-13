@@ -3,27 +3,31 @@ class Particle {
   PVector velocity;
   PVector acceleration;
   float lifespan;
-  color c;
-  float r = random(100);
-  float v = 6.0;
-  float positionx = width/2;
-  float positiony= height/2;
+ 
+  float r = random(-2,5);
 
   Particle(PVector l) {
    acceleration = new PVector(0,0.5);
-    velocity = new PVector(random(-1,1),random(-2,0));
+    velocity = new PVector(r,r);
     position = l.get();
     lifespan = 70.0;
-    float f = 1;
-      for (int i = 0; i <in.bufferSize(); i++){
-        f += abs(in.mix.get(i))*120;
-         } 
-    c = color(f,random(200),200);
-  }
+    
+    //float f = 1;
+    //  for (int i = 0; i <in.bufferSize(); i++){
+    //    f += abs(in.mix.get(i))*120;
+    //     } 
+   // c = color(f,random(200),200);
+    }
 
   void run() {
     update();
     display();
+  }
+  
+   void applyForce(PVector force) {
+    PVector f = force.get();
+    f.div(mass);
+    acceleration.add(f);
   }
 
   // Method to update position
@@ -35,17 +39,20 @@ class Particle {
 
   // Method to display
   void display() {
-    stroke(c,lifespan);
-    strokeWeight(1);
-     noFill();
-     beginShape();
-    for (int u = 0 ; u <in.bufferSize(); u++){
-      v += abs(in.mix.get(u))*5;
-      float x = v*cos(u);
-      float y = v*sin(u);
-      vertex(x + positionx,y + positiony);
-    }
-    endShape();
+    //stroke(c,lifespan);
+    //strokeWeight(1);
+     fill(lifespan);
+     ellipse(position.x,+position.y,10+0.3*sin(frameCount*0.05),10+0.3*sin(frameCount*0.05));
+    //scale(1+0.3*sin(frameCount*0.05));
+    
+    // beginShape();
+    //for (int u = 0 ; u <in.bufferSize(); u++){
+     // v += abs(in.mix.get(u))*5;
+     // float x = v*cos(u);
+     // float y = v*sin(u);
+     // vertex(x + positionx,y + positiony);
+   // }
+    //endShape();
   }
   
   // Is the particle still useful?
