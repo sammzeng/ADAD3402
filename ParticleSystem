@@ -1,6 +1,9 @@
 class ParticleSystem {
   ArrayList<Particle> particles;
   PVector origin;
+  
+  float coin = random(-600, 600);
+  float coin1 = random(-600, 600);
 
   ParticleSystem(PVector position) {
     origin = position.get();
@@ -33,16 +36,16 @@ class ParticleSystem {
       
       pushStyle();
       fill(255,0,0);
-      if (p.position.x>rectx[1] && p.position.y>recty[1] && p.position.x<rectx[1]+trip && p.position.y<recty[1]+trip){
-       ellipse(rectx[1],recty[1],trip2,trip2);
+      if (p.position.x>coin && p.position.y>coin && p.position.x<coin+trip && p.position.y<coin+trip){
+       ellipse(coin,coin,trip2,trip2);
        bell.trigger();
        counter=counter+1;
       }
       
-       if (p.position.x>rectx[2] && p.position.y>recty[2] && p.position.x<rectx[2]+trip && p.position.y<recty[2]+trip){
-       ellipse(rectx[2],recty[2],trip2,trip2);
-       bell2.trigger();
-       counter=counter+1;
+       if (p.position.x>coin1 && p.position.y>coin1 && p.position.x<coin1+trip && p.position.y<coin1]+trip){
+       //ellipse(rectx[2],recty[2],trip2,trip2);
+       bell4.trigger();
+       //counter=counter+1;
       }
       
        if (p.position.x>rectx[3] && p.position.y>recty[3] && p.position.x<rectx[3]+trip && p.position.y<recty[3]+trip){
@@ -50,10 +53,10 @@ class ParticleSystem {
        bell3.trigger();
        counter=counter+1;
       }
-      if (p.position.x>rectx[4] && p.position.y>recty[4] && p.position.x<rectx[4]+trip && p.position.y<recty[4]+trip){
+      /*if (p.position.x>rectx[4] && p.position.y>recty[4] && p.position.x<rectx[4]+trip && p.position.y<recty[4]+trip){
        ellipse(rectx[4],recty[4],trip2,trip2);
        //bell4.trigger();
-      }
+      }*/
       popStyle();
       if (p.isDead()) {
         particles.remove(i);
